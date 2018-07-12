@@ -3,8 +3,8 @@
  * The sidebar containing the main widget area
  *
  * @package WordPress
- * @subpackage MyFirstTheme
- * @since MyFirstTheme 1.0
+ * @subpackage MyChildTheme
+ * @since MyChildTheme 1.0
  */
 
  ?>
