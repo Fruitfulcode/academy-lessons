@@ -1,0 +1,1 @@
+var my_jscode = 'my_jscode';
