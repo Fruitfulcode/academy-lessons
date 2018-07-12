@@ -9,9 +9,9 @@
 
  ?>
  
-<div id="sidebar-primary" class="sidebar">
-	<?php if ( is_active_sidebar( 'primary' ) ) : ?>
-		<?php dynamic_sidebar( 'primary' ); ?>
+<div id="sidebar-childsidebar" class="sidebar">
+	<?php if ( is_active_sidebar( 'childsidebar' ) ) : ?>
+		<?php dynamic_sidebar( 'childsidebar' ); ?>
 	<?php else : ?>
 		<!-- Time to add some widgets! -->
 	<?php endif; ?>
