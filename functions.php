@@ -102,3 +102,17 @@ function my_register_sidebars() {
 	);
 	/* Repeat register_sidebar() code for additional sidebars. */
 }
+
+
+add_action( 'customize_register', 'myfirsttheme_customizer_init' );
+
+function myfirsttheme_customizer_init( $wp_customize ) {
+	
+	$wp_customize->add_setting(
+		'true_background_image',
+		array(
+			'default'      => '', // по умолчанию - фоновое изображение не установлено
+			'transport'    => $true_transport
+		)
+	);
+}
