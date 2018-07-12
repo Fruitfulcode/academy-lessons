@@ -1,1 +1,1 @@
-# academy-lessons
+# Academy Lessons
