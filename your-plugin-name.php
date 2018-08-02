@@ -85,3 +85,53 @@ function mfp_add_button($content){
 	return $content;
 }
 
+
+//Check if post in favorite
+function mfp_check_post($post_id, $user_id){
+	global $wpdb;
+	$sql = "SELECT post_id FROM `".$wpdb->prefix."my_favorite_posts` WHERE post_id = %d AND user_id = %d";
+	$result = $wpdb->get_row( $wpdb->prepare( $sql, $post_id, $user_id ) );
+	return $result;
+}
+
+//Get favorite posts array 
+function mfp_get_posts($user_id){
+	global $wpdb;
+	$sql = "SELECT post_id FROM `".$wpdb->prefix."my_favorite_posts` WHERE user_id = %d";
+	$result = $wpdb->get_results( $wpdb->prepare( $sql, $user_id ) );
+	return $result;
+}
+
+//Add post to favorite
+function mfp_add_post($post_id) {
+	global $wpdb;
+
+	$user_id = get_current_user_id();
+
+	if (!$user_id) {
+		return;
+	}
+	return $wpdb->insert($wpdb->prefix."my_favorite_posts", array('post_id' => $post_id, 'user_id' => $user_id), array('%d','%d'));
+}
+
+//Remove post from favorite
+function mfp_remove_post($post_id) {
+	global $wpdb;
+	
+	$user_id = get_current_user_id();
+	if (!$user_id) {
+		return;
+	}
+	$wpdb->delete($wpdb->prefix."my_favorite_posts", array('post_id' => $post_id, 'user_id' => $user_id), array('%d','%d'));
+}
+
+load_plugin_textdomain( 'my-favorite-posts', false, dirname(plugin_basename( __FILE__ )).'/lang/');
+
+if (isset($_POST['mfp_post_id'])) {
+	if ($_POST['mfp_action'] == 'add') {
+		$this->mfp_add_post((int)$_POST['mfp_post_id']);
+	}
+	if ($_POST['mfp_action'] == 'remove') {
+		$this->mfp_remove_post((int)$_POST['mfp_post_id']);
+	}	
+}
