@@ -25,15 +25,31 @@ along with {Plugin Name}. If not, see {License URI}.
 */
 
 register_activation_hook( __FILE__, 'myplugin_activate' );
+
+//Activation and add table to db
 function myplugin_activate() {
-	// activate actions without echo
+	global $wpdb;
+	$sql = "CREATE TABLE `".$wpdb->prefix."my_favorite_posts` (
+	  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	  `user_id` int(11) unsigned NOT NULL DEFAULT '0',
+	  `post_id` int(11) unsigned NOT NULL DEFAULT '0',
+	  PRIMARY KEY (`id`),
+	  KEY `user_id` (`user_id`),
+	  KEY `post_id` (`post_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+	$wpdb->query( $sql );
 }
+
 
 register_deactivation_hook( __FILE__, 'myplugin_deactivate' );
-function myplugin_deactivate(){
-	// deactivate actions
+
+//Nothing
+function myplugin_deactivate() {
+
 }
 
+//Uninstall hook
 register_uninstall_hook(__FILE__, 'myplugin_uninstall');
 function myplugin_uninstall() {
 	//uninstall actions, for example delete_option("option_name"); - your options should not litter the database
@@ -68,3 +84,4 @@ function mfp_add_button($content){
 	}
 	return $content;
 }
+
