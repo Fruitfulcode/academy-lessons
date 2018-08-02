@@ -57,7 +57,7 @@ function myplugin_uninstall() {
 
 
 //Add button to post
-add_filter( 'the_content', array($this, 'mfp_add_button' ));
+add_filter( 'the_content', 'mfp_add_button' );
 
 //Add button to post
 function mfp_add_button($content){
@@ -85,3 +85,57 @@ function mfp_add_button($content){
 	return $content;
 }
 
+//Shortcode to display faforite posts everywhere ([my-favorite-posts])
+add_shortcode( 'my-favorite-posts', 'mfp_shortcode');
+
+//Shortcode to display faforite posts everywhere ([my-favorite-posts])
+function mfp_shortcode() {
+	global $post;
+
+	$user_id = get_current_user_id();
+	if (!$user_id) {
+		return;
+	}
+	$posts = mfp_get_posts($user_id);
+	if ($posts) { ?>
+		<ul>
+		<?php 
+		foreach ($posts as $mf_post) {
+			$s_post = get_post($mf_post->post_id);
+			?>
+			<li>
+					<p class="mfp_title"><a href="<?php echo get_permalink($mf_post->post_id) ?>" rel="bookmark"><?php echo $s_post->post_title; ?></a></p>
+
+					<div class="mfp_thumbnail">
+						<a href="<?php echo get_permalink($mf_post->post_id); ?>">
+							<?php echo  get_the_post_thumbnail($mf_post->post_id, 'medium'); ?>
+						</a>
+					</div>
+				
+				<div class="mfp_content">
+					<p><?php echo $s_post->post_content; ?></p>
+					<form action="" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="mfp_post_id" value="<?php echo $mf_post->post_id; ?>">
+						<input type="hidden" name="mfp_action" value="remove">
+						<input type="submit" id="mfp_button" value="<?php echo __( 'Remove from favorite', 'my-favorite-posts' ); ?>">
+					</form>
+				</div>
+			</li>
+			<?php 
+		} ?>
+		</ul>
+		<?php 
+	} else {
+		echo __( 'No entries found', 'my-favorite-posts' );
+	}
+
+	return $html;
+}
+
+//Get favorite posts array 
+function mfp_get_posts($user_id){
+	global $wpdb;
+	$sql = "SELECT post_id FROM `".$wpdb->prefix."my_favorite_posts` WHERE user_id = %d";
+	$result = $wpdb->get_results( $wpdb->prepare( $sql, $user_id ) );
+	return $result;
+}
